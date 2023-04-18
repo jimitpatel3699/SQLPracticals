@@ -1,12 +1,12 @@
---Create table product.
-create table Product(Id int identity(1,1) primary key,
-ProductName nvarchar(500),Category nvarchar(50),Price money);
---Alter table product and add constraint
-alter table Product add Description nvarchar(100);
-alter table Product alter column ProductName nvarchar(500) not null;
-alter table Product add constraint CHK_Product_Price check(Price>0);
+--Create table Product.
+CREATE TABLE Product(Id INT IDENTITY(1,1) PRIMARY KEY,
+ProductName NVARCHAR(500),Category NVARCHAR(50),Price MONEY);
+--Alter table product and add constraint.
+ALTER TABLE Product ADD Description NVARCHAR(100);
+ALTER TABLE Product ALTER COLUMN ProductName NVARCHAR(500) NOT NULL;
+ALTER TABLE Product ADD CONSTRAINT CHK_Product_Price CHECK(Price>0);
 --Insert data into product.
-insert into Product values
+INSERT INTO Product VALUES
 ('Dabar chyawanprash','Health',350,'Ayurvedic health supplement with natural herbs and spices to boost immunity.'),
 ('Himalaya Liv.52','Health',225,'Herbal medicine for liver support and detoxification.'),
 ('Amway Nutrilite','Health',1749,'Nutritional supplement with vitamins and minerals to support overall health and well-being.'),
@@ -19,12 +19,12 @@ insert into Product values
 ('Samsung Galaxy Watch 4','Smart Watches',23999,'Smartwatch with advanced fitness and health tracking features.'),
 ('Titan Raga Analog Watch','Fashion Accessories',5995,'Elegant and feminine watch with mother-of-pearl dial.');
 --Write a query to list all the products belonging to health category.
-select Id,ProductName,Category,Price,Description from Product where Category = 'health';
+SELECT Id,ProductName,Category,Price,Description FROM Product WHERE Category = 'Health';
 --Write a query to get total price of all products.
-select sum(Price) TotalPrice from Product;
+SELECT SUM(Price) TotalPrice FROM Product;
 --Write a query to get total price of all products category wise.
-select Category,sum(Price) from Product group by Category;
+SELECT Category,SUM(Price) FROM Product GROUP BY Category;
 --Write a query to display product in descending order of price
-select Id,ProductName,Category,Price,Description from Product order by Price desc;
+SELECT Id,ProductName,Category,Price,Description FROM Product ORDER BY Price DESC;
 --Write a query to display category wise product count having price greater than  10000.
-select Category,count(Category) ProductCount from Product where Price > 10000 group by Category;
+SELECT Category,COUNT(Category) ProductCount FROM Product WHERE Price > 10000 GROUP BY Category;
