@@ -1,16 +1,16 @@
---Queries related to functions, date, Joins, group by..having, sub query.
+--Queries related to functions, date, Joins, procedure, paging.
 USE Excercise;
---Department table
+--Department table.
 CREATE TABLE Department(Id NUMERIC(2) PRIMARY KEY,DepartmentName VARCHAR(15),Location VARCHAR(15));
 INSERT INTO Department VALUES
 (10,'Accounting','New York'),
 (20,'Research','Dallas'),
 (30,'Sales','Chicago'),
 (40,'Operations','boston')
---Update table
+--Update table.
 UPDATE Department SET Location='Boston' WHERE Id=40;
 SELECT * FROM Department;
---Employee table
+--Employee table.
 CREATE TABLE Employee
 (Id NUMERIC(4) PRIMARY KEY, EmployeeName VARCHAR(10),Job VARCHAR(10),ManagerId NUMERIC(4),
 HireDate DATE,Salary NUMERIC(7,2),Commision NUMERIC(7,2),Department_Id NUMERIC(2) REFERENCES Department(Id));
@@ -101,5 +101,54 @@ INSERT INTO Appointment VALUES
 (201812,'D07','P07','T08','30-oct-18',25,'I');
 --Select all record from Appointment.
 SELECT * FROM Appointment;
+--Insert employee using stored procedure.
+EXEC usp_EmployeeInsert @Id=7935,@EmployeeName='Miller',@Job='Clerk',@ManagerId=7782,@HireDate='23-JAN-82',@Salary=1300,@Commision=0,@Department_Id=10;
+EXEC usp_EmployeeInsert @Id=7635,@EmployeeName='David',@Job='Analyst',@ManagerId=7566,@HireDate='25-MAR-82',@Salary=3000,@Commision=0,@Department_Id=20;
+EXEC usp_EmployeeInsert @Id=7535,@EmployeeName='Saurabh',@Job='Manager',@ManagerId=7839,@HireDate='28-JAN-82',@Salary=2850,@Commision=0,@Department_Id=30;
+EXEC usp_EmployeeInsert @Id=7735,@EmployeeName='Aakash',@Job='Salesman',@ManagerId=7698,@HireDate='22-FEB-82',@Salary=1250,@Commision=400,@Department_Id=30;
+--Set new Apointment using stored procedure.
+EXEC usp_AppointmentNew @Id=201813,@Doctor_Id='D01',@Patient_Id='P10',@Treatment_Id='T07',@AppointmentDate='15-JUL-18',@Duration=30,@Status='I';
+EXEC usp_AppointmentNew @Id=201814,@Doctor_Id='D03',@Patient_Id='P02',@Treatment_Id='T09',@AppointmentDate='15-JUL-18',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=201815,@Doctor_Id='D05',@Patient_Id='P05',@Treatment_Id='T06',@AppointmentDate='15-JUL-18',@Duration=90,@Status='I';
+EXEC usp_AppointmentNew @Id=202301,@Doctor_Id='D05',@Patient_Id='P05',@Treatment_Id='T06',@AppointmentDate='20-APR-23',@Duration=90,@Status=null;
+--View all information using multiple join
+SELECT * FROM vw_TreatmentDeatil;
+--View today's appointments.
+SELECT * FROM vw_TreatmentDeatil WHERE AppointmentDate=CONVERT(varchar,GETDATE());
+--View selected doctor appointments.
+SELECT * FROM vw_TreatmentDeatil WHERE DoctorName LIKE 'Dharmendra%';
+--View periculat treatment appointments.
+SELECT * FROM vw_TreatmentDeatil WHERE TreatmentDetails LIKE 'Retina';
+--View details of perticular employee
+SELECT * FROM fn_GetEmployeedetail(7499);
+SELECT * FROM fn_GetEmployeedetail(7566);
+--Employee Group by according to department type.
+SELECT * FROM fn_GetEmployeejobtype() ;
+SELECT * FROM fn_GetEmployeejobtype() WHERE EmployeeCount<>0;
+SELECT * FROM fn_GetEmployeejobtype() WHERE EmployeeCount>4;
+--Availbale job position available in pericular department
+SELECT * FROM fn_GetEmployeeDepartmentjob(10);
+SELECT EmployeeName,Job,DepartmentName FROM fn_GetEmployeeDepartmentjob(20);
+SELECT * FROM fn_GetEmployeeDepartmentjob(30);
+--Get highest commission
+SELECT * FROM Employee WHERE Commision IS NOT NULL ORDER BY Commision DESC;
+SELECT * FROM fn_EmployeehighestCommision(2);
+SELECT * FROM fn_EmployeehighestCommision(DEFAULT);
+--Paging queries
+EXEC usp_GetCustomerData @SkipRows=10,@NextRows=10;
+EXEC usp_GetCustomerData 20,10;
+EXEC usp_GetCustomerData @SkipRows=40,@NextRows=40;
+--Create tables with GUID and timestamp
+CREATE TABLE Passbook(Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),TimeStampId TIMESTAMP,TransactionDate DATETIME,TransactionType VARCHAR(100) NOT NULL CHECK(TransactionType IN('CREDIT','DEBIT')),
+Amount MONEY NOT NULL CHECK(Amount>0),Description VARCHAR(100));
+INSERT INTO Passbook(TransactionDate,TransactionType,Amount,Description)VALUES
+(CURRENT_TIMESTAMP,'CREDIT',15000,'From account 1234456789'),
+(CURRENT_TIMESTAMP,'DEBIT',20000,'ATM BOB near ganesh gross'),
+(CURRENT_TIMESTAMP,'DEBIT',10000,'From cheque @main branch'),
+(CURRENT_TIMESTAMP,'CREDIT',15000,'From cash @sub branch'),
+(CURRENT_TIMESTAMP,'CREDIT',15000,'From cheque @main branch');
+SELECT * FROM Passbook;
+
+
 
 
