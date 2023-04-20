@@ -13,10 +13,3 @@ SELECT * FROM Employee WHERE EmployeeName LIKE 'J_n%';
 SELECT * FROM Employee WHERE Job IN('clerk','Salesman','Analyst');
 SELECT * FROM Employee WHERE Job='Clerk' AND EmployeeName LIKE 'J%';
 SELECT * FROM Employee ORDER BY EmployeeName DESC;
-
-
-
-
-
-
-

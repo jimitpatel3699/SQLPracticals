@@ -12,5 +12,3 @@ BEGIN
 			ROLLBACK;
 		END CATCH
 END;
-
-

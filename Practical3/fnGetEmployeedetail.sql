@@ -5,4 +5,3 @@ RETURN (SELECT e.Id,e.EmployeeName,e.Job,e.ManagerId,e.HireDate,e.Salary,e.Commi
 INNER JOIN Employee e
 ON d.Id=e.Department_Id
 WHERE E.Id=@EmployeeId);
-

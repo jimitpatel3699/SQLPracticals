@@ -1,4 +1,4 @@
-CREATE DATABASE Demo;
+CREATE DATABASE Excercise;
 --Customer table
 CREATE TABLE Customer(Id VARCHAR(5),lastName CHAR(10),FirstName CHAR(10),Area VARCHAR(10),PhoneNumber NUMERIC(10));
 INSERT INTO Customer VALUES

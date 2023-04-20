@@ -148,7 +148,3 @@ INSERT INTO Passbook(TransactionDate,TransactionType,Amount,Description)VALUES
 (CURRENT_TIMESTAMP,'CREDIT',15000,'From cash @sub branch'),
 (CURRENT_TIMESTAMP,'CREDIT',15000,'From cheque @main branch');
 SELECT * FROM Passbook;
-
-
-
-
