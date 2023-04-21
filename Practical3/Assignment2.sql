@@ -174,10 +174,17 @@ INNER JOIN Appointment a
 ON d.Id = a.Doctor_Id 
 WHERE a.AppointmentDate= CONVERT(DATE,'2023-04-20') 
 GROUP BY d.DoctorName ORDER BY Appointment DESC;
---Get detail of doctor who have highest appointment in a day.
+--Get detail of doctor who have maximum appointment in a day.
 SELECT * FROM fn_DoctorhighestAppointment(GETDATE());
 SELECT * FROM fn_DoctorhighestAppointment('2023-04-20');
---Get detail of doctor how earn maximum in month.
+--Get details of doctor how earn till now.
+SELECT a.Doctor_Id,d.DoctorName,SUM(c.TreatmentFee)TreatmentFees FROM Doctor d
+INNER JOIN Appointment a
+ON d.Id=a.Doctor_Id
+INNER JOIN Charges c
+ON a.Id=c.Appointment_Id 
+GROUP BY a.Doctor_Id,d.DoctorName ORDER BY TreatmentFees DESC;
+--Get details of doctor how much earn in month.
 SELECT a.Doctor_Id,d.DoctorName,SUM(c.TreatmentFee)TreatmentFees FROM Doctor d
 INNER JOIN Appointment a
 ON d.Id=a.Doctor_Id
@@ -187,6 +194,11 @@ GROUP BY a.Doctor_Id,d.DoctorName ORDER BY TreatmentFees DESC;
 --Get detail of doctor who earn maximum in month.
 SELECT * FROM fn_DoctorhighestEarn(01,2018);
 SELECT * FROM fn_DoctorhighestEarn(04,2023);
+--Get detail of doctor based on earning rank in current month.
+Select * from fn_DoctorhighestEarnRankwise(3);
+Select * from fn_DoctorhighestEarnRankwise(1);
+Select * from fn_DoctorhighestEarnRankwise(2);
+Select * from fn_DoctorhighestEarnRankwise(5);
 --Create Charges table.
 CREATE TABLE Charges(Id INT IDENTITY(1,1) PRIMARY KEY,CaseFee MONEY CHECK(CaseFee>0) NOT NULL,TreatmentFee MONEY CHECK(TreatmentFee>0),
 Appointment_Id NUMERIC(6,0) NOT NULL REFERENCES Appointment(Id)); 
@@ -227,3 +239,5 @@ SELECT * INTO #Appointment FROM Appointment;
 SELECT * FROM #Appointment;
 SELECT * INTO ##Doctor FROM Doctor;
 SELECT * FROM ##Doctor;
+exec sp_who;
+KILL 79;

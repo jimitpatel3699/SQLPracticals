@@ -8,7 +8,7 @@ ON a.Doctor_Id=d.Id
 INNER JOIN Charges c
 ON a.Id=c.Appointment_Id;
 --
-SELECT TOP 1 a.Doctor_Id,SUM(c.TreatmentFee)TreatmentFees FROM Appointment a
+SELECT  a.Doctor_Id,SUM(c.TreatmentFee)TreatmentFees FROM Appointment a
 INNER JOIN Charges c
 ON a.Id=c.Appointment_Id 
 GROUP BY a.Doctor_Id ORDER BY TreatmentFees DESC;
