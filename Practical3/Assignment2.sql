@@ -111,10 +111,27 @@ EXEC usp_AppointmentNew @Id=201813,@Doctor_Id='D01',@Patient_Id='P10',@Treatment
 EXEC usp_AppointmentNew @Id=201814,@Doctor_Id='D03',@Patient_Id='P02',@Treatment_Id='T09',@AppointmentDate='15-JUL-18',@Duration=60,@Status='I';
 EXEC usp_AppointmentNew @Id=201815,@Doctor_Id='D05',@Patient_Id='P05',@Treatment_Id='T06',@AppointmentDate='15-JUL-18',@Duration=90,@Status='I';
 EXEC usp_AppointmentNew @Id=202301,@Doctor_Id='D05',@Patient_Id='P05',@Treatment_Id='T06',@AppointmentDate='20-APR-23',@Duration=90,@Status=null;
+EXEC usp_AppointmentNew @Id=202327,@Doctor_Id='D01',@Patient_Id='P05',@Treatment_Id='T07',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202311,@Doctor_Id='D01',@Patient_Id='P01',@Treatment_Id='T05',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202312,@Doctor_Id='D01',@Patient_Id='P02',@Treatment_Id='T07',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202313,@Doctor_Id='D01',@Patient_Id='P04',@Treatment_Id='T05',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202314,@Doctor_Id='D02',@Patient_Id='P03',@Treatment_Id='T04',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202315,@Doctor_Id='D02',@Patient_Id='P05',@Treatment_Id='T04',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202316,@Doctor_Id='D02',@Patient_Id='P09',@Treatment_Id='T04',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202317,@Doctor_Id='D03',@Patient_Id='P03',@Treatment_Id='T02',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202318,@Doctor_Id='D03',@Patient_Id='P10',@Treatment_Id='T02',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202319,@Doctor_Id='D04',@Patient_Id='P04',@Treatment_Id='T05',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202320,@Doctor_Id='D04',@Patient_Id='P02',@Treatment_Id='T05',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202321,@Doctor_Id='D05',@Patient_Id='P01',@Treatment_Id='T06',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202322,@Doctor_Id='D05',@Patient_Id='P04',@Treatment_Id='T08',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202323,@Doctor_Id='D05',@Patient_Id='P05',@Treatment_Id='T08',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202324,@Doctor_Id='D06',@Patient_Id='P07',@Treatment_Id='T02',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202325,@Doctor_Id='D07',@Patient_Id='P09',@Treatment_Id='T06',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
+EXEC usp_AppointmentNew @Id=202326,@Doctor_Id='D07',@Patient_Id='P10',@Treatment_Id='T06',@AppointmentDate='21-APR-23',@Duration=60,@Status='I';
 --View all information using multiple join
 SELECT * FROM vw_TreatmentDeatil;
 --View today's appointments.
-SELECT * FROM vw_TreatmentDeatil WHERE AppointmentDate=CONVERT(varchar,GETDATE());
+SELECT * FROM vw_TreatmentDeatil WHERE AppointmentDate=CONVERT(DATE,GETDATE());
 --View selected doctor appointments.
 SELECT * FROM vw_TreatmentDeatil WHERE DoctorName LIKE 'Dharmendra%';
 --View periculat treatment appointments.
@@ -130,10 +147,6 @@ SELECT * FROM fn_GetEmployeejobtype() WHERE EmployeeCount>4;
 SELECT * FROM fn_GetEmployeeDepartmentjob(10);
 SELECT EmployeeName,Job,DepartmentName FROM fn_GetEmployeeDepartmentjob(20);
 SELECT * FROM fn_GetEmployeeDepartmentjob(30);
---Get highest commission
-SELECT * FROM Employee WHERE Commision IS NOT NULL ORDER BY Commision DESC;
-SELECT * FROM fn_EmployeehighestCommision(2);
-SELECT * FROM fn_EmployeehighestCommision(DEFAULT);
 --Paging queries
 EXEC usp_GetCustomerData @SkipRows=10,@NextRows=10;
 EXEC usp_GetCustomerData 20,10;
@@ -148,3 +161,69 @@ INSERT INTO Passbook(TransactionDate,TransactionType,Amount,Description)VALUES
 (CURRENT_TIMESTAMP,'CREDIT',15000,'From cash @sub branch'),
 (CURRENT_TIMESTAMP,'CREDIT',15000,'From cheque @main branch');
 SELECT * FROM Passbook;
+--Get highest commission
+SELECT * FROM Employee WHERE Commision IS NOT NULL ORDER BY Commision DESC;
+SELECT * FROM fn_EmployeehighestCommision(1);
+SELECT * FROM fn_EmployeehighestCommision(2);
+SELECT * FROM fn_EmployeehighestCommision(3);
+SELECT * FROM fn_EmployeehighestCommision(4);
+SELECT * FROM fn_EmployeehighestCommision(DEFAULT);
+--Get detail of doctor's appointment in a day.
+SELECT d.DoctorName,COUNT(a.Patient_Id)Appointment FROM Doctor d
+INNER JOIN Appointment a
+ON d.Id = a.Doctor_Id 
+WHERE a.AppointmentDate= CONVERT(DATE,'2023-04-20') 
+GROUP BY d.DoctorName ORDER BY Appointment DESC;
+--Get detail of doctor who have highest appointment in a day.
+SELECT * FROM fn_DoctorhighestAppointment(GETDATE());
+SELECT * FROM fn_DoctorhighestAppointment('2023-04-20');
+--Get detail of doctor how earn maximum in month.
+SELECT a.Doctor_Id,d.DoctorName,SUM(c.TreatmentFee)TreatmentFees FROM Doctor d
+INNER JOIN Appointment a
+ON d.Id=a.Doctor_Id
+INNER JOIN Charges c
+ON a.Id=c.Appointment_Id WHERE MONTH(a.AppointmentDate)='04'  AND YEAR(a.AppointmentDate)='2023'
+GROUP BY a.Doctor_Id,d.DoctorName ORDER BY TreatmentFees DESC;
+--Get detail of doctor who earn maximum in month.
+SELECT * FROM fn_DoctorhighestEarn(01,2018);
+SELECT * FROM fn_DoctorhighestEarn(04,2023);
+--Create Charges table.
+CREATE TABLE Charges(Id INT IDENTITY(1,1) PRIMARY KEY,CaseFee MONEY CHECK(CaseFee>0) NOT NULL,TreatmentFee MONEY CHECK(TreatmentFee>0),
+Appointment_Id NUMERIC(6,0) NOT NULL REFERENCES Appointment(Id)); 
+INSERT INTO Charges VALUES
+(500,1200,201801),
+(500,1800,201802),
+(500,1900,201803),
+(500,2200,201804),
+(500,3300,201805),
+(500,6600,201806),
+(500,4800,201807),
+(500,4500,201808),
+(500,4000,201809),
+(500,3400,201810),
+(500,4600,201811),
+(500,2400,201812),
+(500,4900,201813),
+(500,3200,202310),
+(500,2000,202311),
+(500,4200,202312),
+(500,4900,202313),
+(500,1800,202314),
+(500,1600,202315),
+(500,3500,202316),
+(500,2400,202317),
+(500,4100,202318),
+(500,3300,202319),
+(500,1900,202320),
+(500,3400,202321),
+(500,2800,202322),
+(500,2500,202323),
+(500,3200,202324),
+(500,1300,202325),
+(500,2100,202326),
+(500,1300,202327);
+--Temporary table
+SELECT * INTO #Appointment FROM Appointment;
+SELECT * FROM #Appointment;
+SELECT * INTO ##Doctor FROM Doctor;
+SELECT * FROM ##Doctor;
